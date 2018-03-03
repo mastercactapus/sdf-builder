@@ -10,6 +10,26 @@ func (b Builder) Translate(x, y, z float64) Builder {
 	return b
 }
 
+// TranslateCopy will move the object by the given amounts, leaving
+// the original behind (as a copy/union).
+func (b Builder) TranslateCopy(x, y, z float64) Builder {
+	return b.TranslateCopyN(2, x, y, z)
+}
+
+// TranslateCopyN will move the object by the given amounts, leaving
+// the original behind (as a copy/union), performing the operation n times.
+func (b Builder) TranslateCopyN(n int, x, y, z float64) Builder {
+	copies := make([]sdf.SDF3, n)
+	copies[0] = b.SDF3
+	for i, c := range copies[:n-1] {
+		copies[i+1] = sdf.Transform3D(c, sdf.Translate3d(
+			sdf.V3{X: x, Y: y, Z: z},
+		))
+	}
+	b.SDF3 = sdf.Union3D(copies...)
+	return b
+}
+
 // Difference will subtract one or more objects from the receiver.
 func (b Builder) Difference(other ...sdf.SDF3) Builder {
 	for _, s := range other {
