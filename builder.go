@@ -15,18 +15,6 @@ func NewHexagon(size, height float64) Builder {
 	return NewBox(size/2, boxWidth, height).SnapMinX(0).RotateZCopy(6)
 }
 
-// NewRTriangle creates a new right-triangle with the provided
-// opposite and adjacent lengths.
-func NewRTriangle(oLen, aLen, height float64) Builder {
-	return Builder{
-		SDF3: sdf.Extrude3D(sdf.Polygon2D([]sdf.V2{
-			{},
-			{X: oLen},
-			{Y: aLen},
-		}), height),
-	}.Translate(-oLen/2, -aLen/2, height/2)
-}
-
 // NewBox creates a new cubeoid with the given dimensions.
 func NewBox(x, y, z float64) Builder {
 	return Builder{SDF3: sdf.Box3D(sdf.V3{
